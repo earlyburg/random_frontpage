@@ -1,0 +1,5 @@
+name: 'Random Frontpage'
+type: module
+description: 'Creates a page which displays a different, random node of a selected type every time its accessed.'
+core: 8.x
+

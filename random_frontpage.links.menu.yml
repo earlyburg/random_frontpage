@@ -1,0 +1,6 @@
+random_frontpage.admin_settings_form:  
+  title: 'Random Frontpage'  
+  route_name: random_frontpage.admin_settings_form  
+  description: 'Manage settings for random content at URL /frontpage.'  
+  parent: system.admin_config_system  
+  weight: 99  

@@ -1,5 +1,7 @@
-name: 'Random Frontpage'
+name: Random Frontpage
+description: Creates a page which displays a different, random node of a selected type every time its accessed.
+package: Content Display
 type: module
-description: 'Creates a page which displays a different, random node of a selected type every time its accessed.'
-core: 8.x
+version: 1.0
+core_version_requirement: ^8 || ^9
 

@@ -6,67 +6,48 @@
 namespace Drupal\random_frontpage\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal;
 
 /**
- * Controller for /frontpage route output
+ * Class random_frontpageController
+ * @package Drupal\random_frontpage\Controller
+ *
  */
 class random_frontpageController extends ControllerBase {
 
 	public function randomFrontpageView() {
-
-		$entity_type = 'node';
-		$config = \Drupal::config('random_frontpage.adminsettings');
+    $renderer = Drupal::service('renderer');
+		$config = Drupal::config('random_frontpage.adminsettings');
 		$nodetype = $config->get('nodetypes');
 		$displaymode = $config->get('displaymodes');
-
-		/* set the view mode for the output */
 		$view_mode = ($displaymode == "") ? 'full' : $displaymode;
-
-		$setNodeTypeText = "Please set a node type to randomly display at <a href='/admin/config/random_frontpage/adminsettings'>/admin/config/random_frontpage/adminsettings</a>.";
+		$setNodeTypeText = 'Please set a node type to randomly display at <a href="/admin/config/random_frontpage/adminsettings">/admin/config/random_frontpage/adminsettings</a>.';
 		$createNodeTypeText = 'There are no nodes of the selected type "' . $nodetype . '" to display. Please create some.';
-		/* check to see if the user has configured a node type choice in admin 
-		 * otherwise output a placeholder page with a message
-		 */
-	  	if ( empty($nodetype) || !isset($nodetype) ) {
-
+		if ( empty($nodetype) || !isset($nodetype) ) {
 			$element = array("#markup" => $setNodeTypeText);
-
-	  	} else {
-
-			$nids = \Drupal::entityQuery('node')->condition('type', $nodetype)->execute();
-
-			/* make sure that we have nodes of the selected node type to randomize and display  
-			 * otherwise output a placeholder page with a message
-			 */
-	    		if (count($nids) != 0) {
-
-				/* if there are two or more nodes */
-	      			if ( count($nids) > 1 ) {
-
-					/* pick a random NID */
+		}
+		else {
+			$nids = Drupal::entityQuery('node')->condition('type', $nodetype)->execute();
+			if (count($nids) != 0) {
+			  if ( count($nids) >= 2 ) {
 					$key = array_rand($nids, 1);
 					$nid = $nids[$key];
-	      			}
-				/* if there is only one node */
-	      			if ( count($nids) == 1 ) {
-
-					$nid = $nids[0];
-	      			}
+			  } else {
+          $nid = $nids[0];
+        }
 				/* load and display the node */
-				$view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
-				$node_storage = \Drupal::entityTypeManager()->getStorage($entity_type);
+        Drupal::service('page_cache_kill_switch')->trigger();
+				$view_builder = Drupal::entityTypeManager()->getViewBuilder('node');
+				$node_storage = Drupal::entityTypeManager()->getStorage('node');
 				$node = $node_storage->load($nid);
 				$build = $view_builder->view($node, $view_mode);
-				$markup = render($build);
-		    		$element = array("#markup" => $markup);
-
+				$markup = $renderer->render($build);
+				$element = array("#markup" => $markup);
 			} else {
-
 				$element = array("#markup" => $createNodeTypeText);
 			}
-	  	}
-
+		}
 		return $element;
-	} 
+	}
 }
 

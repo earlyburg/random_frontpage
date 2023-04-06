@@ -107,7 +107,7 @@ class random_frontpageController extends ControllerBase {
         } else {
           $nid = $nids[0];
         }
-				/* load and display the random node after clearing the page cache */
+        /* load and display the random node after clearing the page cache */
         $this->killSwitch->trigger();
         $node = $this->entityTypeManager->getStorage('node')->load($nid);
         $build = $this->entityTypeManager->getViewBuilder('node')->view($node, $view_mode);

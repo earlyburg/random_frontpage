@@ -95,7 +95,7 @@ class random_frontpageSettings extends ConfigFormBase {
    * @return array
    *
    */
-	public function buildForm(array $form, FormStateInterface $form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config(static::RANDOM_FRONTPAGE_SETTINGS);
     $form['nodetypes'] = array(
       '#type' => 'select',

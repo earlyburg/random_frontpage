@@ -90,33 +90,33 @@ class random_frontpageController extends ControllerBase {
    *
    */
 	public function randomFrontpageView() {
-		$nodetype = $this->config->get('random_frontpage.adminsettings')->get('nodetypes');
-		$displaymode = $this->config->get('random_frontpage.adminsettings')->get('displaymodes');
-		$view_mode = ($displaymode == "") ? 'full' : $displaymode;
-		$setNodeTypeText = 'Please set a node type to randomly display at <a href="/admin/config/random_frontpage/adminsettings">/admin/config/random_frontpage/adminsettings</a>.';
-		$createNodeTypeText = 'There are no nodes of the selected type "' . $nodetype . '" to display. Please create some.';
-		if (empty($nodetype)) {
-			$element = array("#markup" => $setNodeTypeText);
-		}
-		else {
+    $nodetype = $this->config->get('random_frontpage.adminsettings')->get('nodetypes');
+    $displaymode = $this->config->get('random_frontpage.adminsettings')->get('displaymodes');
+    $view_mode = ($displaymode == "") ? 'full' : $displaymode;
+    $setNodeTypeText = 'Please set a node type to randomly display at <a href="/admin/config/random_frontpage/adminsettings">/admin/config/random_frontpage/adminsettings</a>.';
+    $createNodeTypeText = 'There are no nodes of the selected type "' . $nodetype . '" to display. Please create some.';
+    if (empty($nodetype)) {
+      $element = array("#markup" => $setNodeTypeText);
+    }
+    else {
       $nids = $this->entityTypeManager->getStorage('node')->getQuery()->condition('type', $nodetype)->execute();
-			if (count($nids) != 0) {
-			  if ( count($nids) >= 2 ) {
-					$key = array_rand($nids, 1);
-					$nid = $nids[$key];
-			  } else {
+      if (count($nids) != 0) {
+        if ( count($nids) >= 2 ) {
+          $key = array_rand($nids, 1);
+          $nid = $nids[$key];
+        } else {
           $nid = $nids[0];
         }
 				/* load and display the random node after clearing the page cache */
         $this->killSwitch->trigger();
-				$node = $this->entityTypeManager->getStorage('node')->load($nid);
-				$build = $this->entityTypeManager->getViewBuilder('node')->view($node, $view_mode);
-				$markup = $this->renderer->render($build);
-				$element = array("#markup" => $markup);
-			} else {
-				$element = array("#markup" => $createNodeTypeText);
-			}
-		}
+        $node = $this->entityTypeManager->getStorage('node')->load($nid);
+        $build = $this->entityTypeManager->getViewBuilder('node')->view($node, $view_mode);
+        $markup = $this->renderer->render($build);
+        $element = array("#markup" => $markup);
+      } else {
+        $element = array("#markup" => $createNodeTypeText);
+      }
+    }
     return $element;
-	}
+  }
 }

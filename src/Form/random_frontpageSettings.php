@@ -134,4 +134,3 @@ class random_frontpageSettings extends ConfigFormBase {
 	}
 
 }
-

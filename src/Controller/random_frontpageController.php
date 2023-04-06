@@ -120,4 +120,3 @@ class random_frontpageController extends ControllerBase {
 		return $element;
 	}
 }
-

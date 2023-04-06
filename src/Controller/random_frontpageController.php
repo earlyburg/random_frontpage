@@ -93,8 +93,8 @@ class random_frontpageController extends ControllerBase {
     $nodetype = $this->config->get('random_frontpage.adminsettings')->get('nodetypes');
     $displaymode = $this->config->get('random_frontpage.adminsettings')->get('displaymodes');
     $view_mode = ($displaymode == "") ? 'full' : $displaymode;
-    $setNodeTypeText = 'Please set a node type to randomly display at <a href="/admin/config/random_frontpage/adminsettings">/admin/config/random_frontpage/adminsettings</a>.';
-    $createNodeTypeText = 'There are no nodes of the selected type "' . $nodetype . '" to display. Please create some.';
+    $setNodeTypeText = $this->t('Please set a node type to randomly display at <a href="/admin/config/random_frontpage/adminsettings">/admin/config/random_frontpage/adminsettings</a>.');
+    $createNodeTypeText = $this->t('There are no nodes of the selected type "' . $nodetype . '" to display. Please create some.');
     if (empty($nodetype)) {
       $element = array("#markup" => $setNodeTypeText);
     }

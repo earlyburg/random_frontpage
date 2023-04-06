@@ -117,6 +117,6 @@ class random_frontpageController extends ControllerBase {
 				$element = array("#markup" => $createNodeTypeText);
 			}
 		}
-		return $element;
+    return $element;
 	}
 }

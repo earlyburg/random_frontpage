@@ -7,7 +7,9 @@ namespace Drupal\random_frontpage\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use \Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 
 class random_frontpageSettings extends ConfigFormBase {
 
@@ -19,6 +21,40 @@ class random_frontpageSettings extends ConfigFormBase {
   const RANDOM_FRONTPAGE_SETTINGS = 'random_frontpage.adminsettings';
 
   /**
+   * @var EntityDisplayRepositoryInterface $entityDisplayRepository
+   *
+   */
+  protected EntityDisplayRepositoryInterface $entityDisplayRepository;
+
+  /**
+   * Class constructor.
+   *
+   * @param ConfigFactoryInterface $config_factory
+   * @param EntityDisplayRepositoryInterface $entityDisplayRepository
+   *
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entityDisplayRepository) {
+    parent::__construct($config_factory);
+    $this->entityDisplayRepository = $entityDisplayRepository;
+  }
+
+  /**
+   * Creates the container.
+   *
+   * @param ContainerInterface $container
+   * @return ConfigFormBase|random_frontpageSettings|static
+   *
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('entity_display.repository'),
+    );
+  }
+
+  /**
+   * Returns the form ID string.
+   *
    * @return string
    *
    */
@@ -37,12 +73,14 @@ class random_frontpageSettings extends ConfigFormBase {
 	}
 
   /**
+   * Gets all the configured display modes as an array for a dropdown.
+   *
    * @return array
    *
    */
 	public function getModes() {
 	  $modes = [];
-		$modes_array = Drupal::service('entity_display.repository')->getViewModes('node');
+    $modes_array = $this->entityDisplayRepository->getViewModes('node');
 		foreach ($modes_array as $key => $value) {
 			$modes[$key] = $value['label'];
 		}
@@ -50,6 +88,8 @@ class random_frontpageSettings extends ConfigFormBase {
 	}
 
   /**
+   * The Form Builder.
+   *
    * @param array $form
    * @param FormStateInterface $form_state
    * @return array
@@ -58,28 +98,29 @@ class random_frontpageSettings extends ConfigFormBase {
 	public function buildForm(array $form, FormStateInterface $form_state) {
 
     $config = $this->config(static::RANDOM_FRONTPAGE_SETTINGS);
-
     $form['nodetypes'] = array(
       '#type' => 'select',
-      '#title' => t('Node Type'),
+      '#title' => $this->t('Node Type'),
       '#options' => node_type_get_names(),
       '#default_value' => $config->get('nodetypes'),
-      '#description' => "Select the node type you wish to display at the URL '/frontpage'",
+      '#description' => $this->t('Select the node type you wish to display at the URL "/frontpage"'),
       '#required' => TRUE,
     );
 
 		$form['displaymodes'] = array(
 			'#type' => 'select',
-			'#title' => t('Display Mode'),
+			'#title' => $this->t('Display Mode'),
 			'#options' => $this->getModes(),
 			'#default_value' => $config->get('displaymodes'),
-			'#description' => "Select the display mode for the URL '/frontpage'",
+			'#description' => $this->t('Select the display mode for the URL "/frontpage"'),
       '#required' => TRUE,
 		);
 		return parent::buildForm($form, $form_state);
 	}
 
   /**
+   * Form submit handler.
+   *
    * @param array $form
    * @param FormStateInterface $form_state
    *

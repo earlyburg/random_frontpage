@@ -66,11 +66,11 @@ class random_frontpageSettings extends ConfigFormBase {
    * @return string[]
    *
    */
-	protected function getEditableConfigNames() {
-		return [
+  protected function getEditableConfigNames() {
+    return [
       static::RANDOM_FRONTPAGE_SETTINGS,
-		];
-	}
+      ];
+  }
 
   /**
    * Gets all the configured display modes as an array for a dropdown.
@@ -78,14 +78,14 @@ class random_frontpageSettings extends ConfigFormBase {
    * @return array
    *
    */
-	public function getModes() {
-	  $modes = [];
+  public function getModes() {
+    $modes = [];
     $modes_array = $this->entityDisplayRepository->getViewModes('node');
-		foreach ($modes_array as $key => $value) {
-			$modes[$key] = $value['label'];
-		}
-		return $modes;
-	}
+    foreach ($modes_array as $key => $value) {
+      $modes[$key] = $value['label'];
+    }
+    return $modes;
+  }
 
   /**
    * The Form Builder.
@@ -96,7 +96,6 @@ class random_frontpageSettings extends ConfigFormBase {
    *
    */
 	public function buildForm(array $form, FormStateInterface $form_state) {
-
     $config = $this->config(static::RANDOM_FRONTPAGE_SETTINGS);
     $form['nodetypes'] = array(
       '#type' => 'select',
@@ -105,18 +104,18 @@ class random_frontpageSettings extends ConfigFormBase {
       '#default_value' => $config->get('nodetypes'),
       '#description' => $this->t('Select the node type you wish to display at the URL "/frontpage"'),
       '#required' => TRUE,
-    );
+      );
 
-		$form['displaymodes'] = array(
-			'#type' => 'select',
-			'#title' => $this->t('Display Mode'),
-			'#options' => $this->getModes(),
-			'#default_value' => $config->get('displaymodes'),
-			'#description' => $this->t('Select the display mode for the URL "/frontpage"'),
+    $form['displaymodes'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Display Mode'),
+      '#options' => $this->getModes(),
+      '#default_value' => $config->get('displaymodes'),
+      '#description' => $this->t('Select the display mode for the URL "/frontpage"'),
       '#required' => TRUE,
-		);
-		return parent::buildForm($form, $form_state);
-	}
+      );
+    return parent::buildForm($form, $form_state);
+  }
 
   /**
    * Form submit handler.
@@ -125,12 +124,12 @@ class random_frontpageSettings extends ConfigFormBase {
    * @param FormStateInterface $form_state
    *
    */
-	public function submitForm(array &$form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->configFactory->getEditable(static::RANDOM_FRONTPAGE_SETTINGS)
-			->set('nodetypes', $form_state->getValue('nodetypes'))
-			->set('displaymodes', $form_state->getValue('displaymodes'))
-			->save();
+      ->set('nodetypes', $form_state->getValue('nodetypes'))
+      ->set('displaymodes', $form_state->getValue('displaymodes'))
+      ->save();
     parent::submitForm($form, $form_state);
-	}
+  }
 
 }

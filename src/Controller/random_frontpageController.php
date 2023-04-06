@@ -89,7 +89,7 @@ class random_frontpageController extends ControllerBase {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    *
    */
-	public function randomFrontpageView() {
+  public function randomFrontpageView() {
     $nodetype = $this->config->get('random_frontpage.adminsettings')->get('nodetypes');
     $displaymode = $this->config->get('random_frontpage.adminsettings')->get('displaymodes');
     $view_mode = ($displaymode == "") ? 'full' : $displaymode;

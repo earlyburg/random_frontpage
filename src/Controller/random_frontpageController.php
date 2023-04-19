@@ -5,12 +5,16 @@
  */
 namespace Drupal\random_frontpage\Controller;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class random_frontpageController
@@ -24,21 +28,21 @@ class random_frontpageController extends ControllerBase {
    *
    * @var ConfigFactoryInterface $config
    */
-  private $config;
+  private ConfigFactoryInterface $config;
 
  /**
   * The renderer interface.
   *
   * @var RendererInterface $renderer
   */
-  private $renderer;
+  private RendererInterface $renderer;
 
   /**
    * The kill switch.
    *
    * @var KillSwitch $killSwitch
    */
-  private $killSwitch;
+  private KillSwitch $killSwitch;
 
   /**
    * The entity type manager.
@@ -68,8 +72,8 @@ class random_frontpageController extends ControllerBase {
   /**
    * @param ContainerInterface $container
    * @return random_frontpageController|static
-   * @throws \Psr\Container\ContainerExceptionInterface
-   * @throws \Psr\Container\NotFoundExceptionInterface
+   * @throws ContainerExceptionInterface
+   * @throws NotFoundExceptionInterface
    *
    */
   public static function create(ContainerInterface $container) {
@@ -85,8 +89,8 @@ class random_frontpageController extends ControllerBase {
    * Creates a rendered view of a selected node-type.
    *
    * @return array|string[]
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
-   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws InvalidPluginDefinitionException
+   * @throws PluginNotFoundException
    *
    */
   public function randomFrontpageView() {
@@ -100,7 +104,7 @@ class random_frontpageController extends ControllerBase {
     else {
       $nids = $this->entityTypeManager->getStorage('node')->getQuery()->condition('type', $nodetype)->execute();
       if (count($nids) != 0) {
-        if ( count($nids) >= 2 ) {
+        if (count($nids) >= 2) {
           $key = array_rand($nids, 1);
           $nid = $nids[$key];
         } else {

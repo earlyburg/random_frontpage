@@ -21,6 +21,13 @@ class random_frontpageSettings extends ConfigFormBase {
   const RANDOM_FRONTPAGE_SETTINGS = 'random_frontpage.adminsettings';
 
   /**
+   * Drupal config factory interface.
+   *
+   * @var ConfigFactoryInterface $configFactory
+   */
+  protected $configFactory;
+
+  /**
    * @var EntityDisplayRepositoryInterface $entityDisplayRepository
    *
    */
@@ -33,7 +40,9 @@ class random_frontpageSettings extends ConfigFormBase {
    * @param EntityDisplayRepositoryInterface $entityDisplayRepository
    *
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityDisplayRepositoryInterface $entityDisplayRepository) {
+  public function __construct(
+    ConfigFactoryInterface $config_factory,
+    EntityDisplayRepositoryInterface $entityDisplayRepository) {
     parent::__construct($config_factory);
     $this->entityDisplayRepository = $entityDisplayRepository;
   }

@@ -1,62 +1,60 @@
 <?php
-/**
- * @file
- * Contains Drupal\random_frontpage\Controller\random_frontpageController.
- */
+
 namespace Drupal\random_frontpage\Controller;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
- * Class random_frontpageController
- * @package Drupal\random_frontpage\Controller
+ * Class random_frontpageController.
  *
+ * @package Drupal\random_frontpage\Controller
  */
 class random_frontpageController extends ControllerBase {
 
   /**
    * The config factory interface.
    *
-   * @var ConfigFactoryInterface $config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   private ConfigFactoryInterface $config;
 
- /**
-  * The renderer interface.
-  *
-  * @var RendererInterface $renderer
-  */
+  /**
+   * The renderer interface.
+   *
+   * @var \Drupal\Core\Render\RendererInterface
+   */
   private RendererInterface $renderer;
 
   /**
    * The kill switch.
    *
-   * @var KillSwitch $killSwitch
+   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
    */
   private KillSwitch $killSwitch;
 
   /**
    * The entity type manager.
    *
-   * @var EntityTypeManagerInterface $entityTypeManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-   protected $entityTypeManager;
+  protected $entityTypeManager;
 
   /**
-   * @param ConfigFactoryInterface $config
-   * @param RendererInterface $renderer
-   * @param KillSwitch $killSwitch
-   * @param EntityTypeManagerInterface $entity_manager
+   * The constructor function for an instance.
    *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
+   *   The config factory interface.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer interface.
+   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $killSwitch
+   *   The killswitch object.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
+   *   The entity type manager interface.
    */
   public function __construct(
     ConfigFactoryInterface $config,
@@ -70,11 +68,10 @@ class random_frontpageController extends ControllerBase {
   }
 
   /**
-   * @param ContainerInterface $container
+   * @param \Psr\Container\ContainerInterface $container
    * @return random_frontpageController|static
-   * @throws ContainerExceptionInterface
-   * @throws NotFoundExceptionInterface
-   *
+   * @throws \Psr\Container\ContainerExceptionInterface
+   * @throws \Psr\Container\NotFoundExceptionInterface
    */
   public static function create(ContainerInterface $container) {
     return new static(
@@ -89,9 +86,9 @@ class random_frontpageController extends ControllerBase {
    * Creates a rendered view of a selected node-type.
    *
    * @return array|string[]
-   * @throws InvalidPluginDefinitionException
-   * @throws PluginNotFoundException
    *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function randomFrontpageView() {
     $nodetype = $this->config->get('random_frontpage.adminsettings')->get('nodetypes');
@@ -99,7 +96,7 @@ class random_frontpageController extends ControllerBase {
     $view_mode = ($displaymode == "") ? 'full' : $displaymode;
     if (empty($nodetype)) {
       $setNodeTypeText = $this->t('Please set a node type to randomly display at <a href="/admin/config/random_frontpage/adminsettings">/admin/config/random_frontpage/adminsettings</a>.');
-      $element = array("#markup" => $setNodeTypeText);
+      $element = ["#markup" => $setNodeTypeText];
     }
     else {
       $nids = $this->entityTypeManager->getStorage('node')->getQuery()->condition('type', $nodetype)->execute();
@@ -107,7 +104,8 @@ class random_frontpageController extends ControllerBase {
         if (count($nids) >= 2) {
           $key = array_rand($nids, 1);
           $nid = $nids[$key];
-        } else {
+        }
+        else {
           $nid = $nids[0];
         }
         /* load and display the random node after clearing the page cache */
@@ -115,12 +113,16 @@ class random_frontpageController extends ControllerBase {
         $node = $this->entityTypeManager->getStorage('node')->load($nid);
         $build = $this->entityTypeManager->getViewBuilder('node')->view($node, $view_mode);
         $markup = $this->renderer->render($build);
-        $element = array("#markup" => $markup);
-      } else {
-        $createNodeTypeText = $this->t('There are no nodes of the selected type "' . $nodetype . '" to display. Please create some.');
-        $element = array("#markup" => $createNodeTypeText);
+        $element = ["#markup" => $markup];
+      }
+      else {
+        $createNodeTypeText = $this->t('There are no nodes of the selected type @nodetype to display. Please create some.', [
+          '@nodetype' => $nodetype,
+        ]);
+        $element = ["#markup" => $createNodeTypeText];
       }
     }
     return $element;
   }
+
 }

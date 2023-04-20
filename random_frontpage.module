@@ -1,6 +1,7 @@
 <?php
+
 /**
+ * @file
  * @file
  * Module file for random_frontpage module.
  */
-

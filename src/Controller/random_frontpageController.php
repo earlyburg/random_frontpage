@@ -99,7 +99,12 @@ class random_frontpageController extends ControllerBase {
       $element = ["#markup" => $setNodeTypeText];
     }
     else {
-      $nids = $this->entityTypeManager->getStorage('node')->getQuery()->condition('type', $nodetype)->execute();
+      $nids = $this->entityTypeManager
+        ->getStorage('node')
+        ->getQuery()
+        ->condition('type', $nodetype)
+        ->accessCheck(TRUE)
+        ->execute();
       if (count($nids) != 0) {
         if (count($nids) >= 2) {
           $key = array_rand($nids, 1);

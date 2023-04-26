@@ -10,11 +10,11 @@ use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
- * Class random_frontpageController.
+ * The page controller for the random_frontpage module.
  *
  * @package Drupal\random_frontpage\Controller
  */
-class random_frontpageController extends ControllerBase {
+class RandomFrontpageController extends ControllerBase {
 
   /**
    * The config factory interface.
@@ -68,8 +68,14 @@ class random_frontpageController extends ControllerBase {
   }
 
   /**
+   * The container create function.
+   *
    * @param \Psr\Container\ContainerInterface $container
-   * @return random_frontpageController|static
+   *   The container interface.
+   *
+   * @return RandomFrontpageController|static
+   *   The random_frontpage page controller.
+   *
    * @throws \Psr\Container\ContainerExceptionInterface
    * @throws \Psr\Container\NotFoundExceptionInterface
    */
@@ -86,6 +92,7 @@ class random_frontpageController extends ControllerBase {
    * Creates a rendered view of a selected node-type.
    *
    * @return array|string[]
+   *   Creates a render array with random content of a specific type.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException

@@ -9,9 +9,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
 
 /**
+ * Configuration form for Random Frontpage.
  *
+ * @package Drupal\random_frontpage\Form
  */
-class random_frontpageSettings extends ConfigFormBase {
+class RandomFrontpageSettings extends ConfigFormBase {
 
   /**
    * Config settings.
@@ -28,6 +30,8 @@ class random_frontpageSettings extends ConfigFormBase {
   protected $configFactory;
 
   /**
+   * The entity display repo interface.
+   *
    * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
    */
   protected EntityDisplayRepositoryInterface $entityDisplayRepository;
@@ -53,7 +57,7 @@ class random_frontpageSettings extends ConfigFormBase {
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The dependency injection container object.
    *
-   * @return \Drupal\Core\Form\ConfigFormBase|random_frontpageSettings|static
+   * @return \Drupal\Core\Form\ConfigFormBase|RandomFrontpageSettings|static
    *   Returns a new instance of this class.
    */
   public static function create(ContainerInterface $container) {
@@ -109,6 +113,7 @@ class random_frontpageSettings extends ConfigFormBase {
    *   The current state of the form.
    *
    * @return array
+   *   A complete form array object.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config(static::RANDOM_FRONTPAGE_SETTINGS);

@@ -1,7 +1,7 @@
 random_frontpage.admin_settings_form:
   path: '/admin/config/random_frontpage/adminsettings'
   defaults:
-    _form: '\Drupal\random_frontpage\Form\random_frontpageSettings'
+    _form: '\Drupal\random_frontpage\Form\RandomFrontpageSettings'
     _title: 'Random Frontpage Settings'
   requirements:
     _permission: 'administer random_frontpage'
@@ -10,6 +10,6 @@ random_frontpage.admin_settings_form:
 random_frontpage.frontpage:
   path: '/frontpage'
   defaults:
-    _controller: '\Drupal\random_frontpage\Controller\random_frontpageController::randomFrontpageView'
+    _controller: '\Drupal\random_frontpage\Controller\RandomFrontpageController::randomFrontpageView'
   requirements:
     _permission: 'access content'

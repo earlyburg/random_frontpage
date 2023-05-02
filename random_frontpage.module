@@ -4,3 +4,21 @@
  * @file
  * Module file for random_frontpage module.
  */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_help().
+ */
+function random_frontpage_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    /* Main module help for the random_frontpage module. */
+    case 'help.page.random_frontpage':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<div>' . t('This module Creates a page at the URL "/frontpage" which displays a different, random node of a selected type every time it\'s accessed.') . '</div>';
+      $output .= '<div>' . t('To configure, select a node type to display, and a display format at <a href=":aliases">Random Frontpage Settings</a>, and save your preferences.', [':aliases' => Url::fromRoute('random_frontpage.admin_settings_form')->toString()]) . '</div>';
+      return $output;
+  }
+}

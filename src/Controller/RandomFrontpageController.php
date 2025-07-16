@@ -47,23 +47,23 @@ class RandomFrontpageController extends ControllerBase {
   /**
    * The constructor function for an instance.
    *
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory interface.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
+   * @param \Drupal\Core\Render\RendererInterface $renderer_interface
    *   The renderer interface.
-   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $killSwitch
+   * @param \Drupal\Core\PageCache\ResponsePolicy\KillSwitch $kill_switch
    *   The killswitch object.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
    *   The entity type manager interface.
    */
   public function __construct(
-    ConfigFactoryInterface $config,
-    RendererInterface $renderer,
-    KillSwitch $killSwitch,
+    ConfigFactoryInterface $config_factory,
+    RendererInterface $renderer_interface,
+    KillSwitch $kill_switch,
     EntityTypeManagerInterface $entity_manager) {
-    $this->config = $config;
-    $this->renderer = $renderer;
-    $this->killSwitch = $killSwitch;
+    $this->config = $config_factory;
+    $this->renderer = $renderer_interface;
+    $this->killSwitch = $kill_switch;
     $this->entityTypeManager = $entity_manager;
   }
 
@@ -96,6 +96,7 @@ class RandomFrontpageController extends ControllerBase {
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Exception
    */
   public function randomFrontpageView() {
     $nodetype = $this->config->get('random_frontpage.adminsettings')->get('nodetypes');
@@ -110,11 +111,11 @@ class RandomFrontpageController extends ControllerBase {
         ->getStorage('node')
         ->getQuery()
         ->condition('type', $nodetype)
-        ->accessCheck(TRUE)
+        ->accessCheck(FALSE)
         ->execute();
       if (count($nids) != 0) {
         if (count($nids) >= 2) {
-          $key = array_rand($nids, 1);
+          $key = array_rand($nids);
           $nid = $nids[$key];
         }
         else {

@@ -42,15 +42,15 @@ class RandomFrontpageSettings extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory interface.
-   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entityDisplayRepository
+   * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entitydisplay_repository
    *   The entity display repository interface.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
-    TypedConfigManagerInterface $typedConfigManager,
-    EntityDisplayRepositoryInterface $entityDisplayRepository) {
-    parent::__construct($config_factory, $typedConfigManager);
-    $this->entityDisplayRepository = $entityDisplayRepository;
+    TypedConfigManagerInterface $typed_configmanager,
+    EntityDisplayRepositoryInterface $entitydisplay_repository) {
+    parent::__construct($config_factory, $typed_configmanager);
+    $this->entityDisplayRepository = $entitydisplay_repository;
   }
 
   /**
@@ -149,7 +149,7 @@ class RandomFrontpageSettings extends ConfigFormBase {
    *   The current state of the form.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->configFactory->getEditable(static::RANDOM_FRONTPAGE_SETTINGS)
+    $this->config(static::RANDOM_FRONTPAGE_SETTINGS)
       ->set('nodetypes', $form_state->getValue('nodetypes'))
       ->set('displaymodes', $form_state->getValue('displaymodes'))
       ->save();

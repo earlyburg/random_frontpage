@@ -60,7 +60,8 @@ class RandomFrontpageController extends ControllerBase {
     ConfigFactoryInterface $config_factory,
     RendererInterface $renderer_interface,
     KillSwitch $kill_switch,
-    EntityTypeManagerInterface $entity_manager) {
+    EntityTypeManagerInterface $entity_manager,
+  ) {
     $this->config = $config_factory;
     $this->renderer = $renderer_interface;
     $this->killSwitch = $kill_switch;

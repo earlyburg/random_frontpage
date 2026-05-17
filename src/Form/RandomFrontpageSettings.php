@@ -42,13 +42,16 @@ class RandomFrontpageSettings extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory interface.
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_configmanager
+   *   The typed config manager interface.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entitydisplay_repository
    *   The entity display repository interface.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typed_configmanager,
-    EntityDisplayRepositoryInterface $entitydisplay_repository) {
+    EntityDisplayRepositoryInterface $entitydisplay_repository,
+  ) {
     parent::__construct($config_factory, $typed_configmanager);
     $this->entityDisplayRepository = $entitydisplay_repository;
   }

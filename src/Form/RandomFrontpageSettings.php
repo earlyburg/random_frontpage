@@ -2,12 +2,14 @@
 
 namespace Drupal\random_frontpage\Form;
 
+use Drupal\Component\Utility\DeprecationHelper;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Entity\EntityDisplayRepositoryInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 
 /**
  * Configuration form for Random Frontpage.
@@ -35,7 +37,14 @@ class RandomFrontpageSettings extends ConfigFormBase {
    *
    * @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface
    */
-  protected EntityDisplayRepositoryInterface $entityDisplayRepository;
+  protected $entityDisplayRepository;
+
+  /**
+   * The entity type bundle info interface.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface
+   */
+  protected $entityTypeBundleInfo;
 
   /**
    * Class constructor.
@@ -46,14 +55,18 @@ class RandomFrontpageSettings extends ConfigFormBase {
    *   The typed config manager interface.
    * @param \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entitydisplay_repository
    *   The entity display repository interface.
+   * @param \Drupal\Core\Entity\EntityTypeBundleInfoInterface $entity_type_bundle_info
+   *   The entity type bundle info interface.
    */
   public function __construct(
     ConfigFactoryInterface $config_factory,
     TypedConfigManagerInterface $typed_configmanager,
     EntityDisplayRepositoryInterface $entitydisplay_repository,
+    EntityTypeBundleInfoInterface $entity_type_bundle_info,
   ) {
     parent::__construct($config_factory, $typed_configmanager);
     $this->entityDisplayRepository = $entitydisplay_repository;
+    $this->entityTypeBundleInfo = $entity_type_bundle_info;
   }
 
   /**
@@ -70,6 +83,7 @@ class RandomFrontpageSettings extends ConfigFormBase {
       $container->get('config.factory'),
       $container->get('config.typed'),
       $container->get('entity_display.repository'),
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -126,7 +140,7 @@ class RandomFrontpageSettings extends ConfigFormBase {
     $form['nodetypes'] = [
       '#type' => 'select',
       '#title' => $this->t('Node Type'),
-      '#options' => node_type_get_names(),
+      '#options' => DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '11.3.0', fn() => $this->entityTypeBundleInfo->getBundleLabels('node'), fn() => node_type_get_names()),
       '#default_value' => $config->get('nodetypes'),
       '#description' => $this->t('Select the node type you wish to display at the URL "/frontpage"'),
       '#required' => TRUE,

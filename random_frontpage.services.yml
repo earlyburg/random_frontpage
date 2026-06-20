@@ -1,0 +1,5 @@
+
+services:
+  Drupal\random_frontpage\Hook\RandomFrontpageHooks:
+    class: Drupal\random_frontpage\Hook\RandomFrontpageHooks
+    autowire: true
